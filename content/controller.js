@@ -196,9 +196,9 @@ var siriusplayer = {
       }
       else
       {
-        dump("Error getting songlist feed from DogstarRadio.\n");
+        dump("Error getting songlist feed from the SIRIUS Player Project.\n");
         siriusplayer.trackerupdatefreq = Math.round(siriusplayer.trackerupdatefreq * 1.75);
-        siriusplayer.alert.show("Error getting songlist feed from DogstarRadio.  Trying again in " + siriusplayer.trackerupdatefreq + " second" + (siriusplayer.trackerupdatefreq == 1 ? "" : "s") + ".", null);
+        siriusplayer.alert.show("Error getting songlist feed from the SIRIUS Player Project.  Trying again in " + siriusplayer.trackerupdatefreq + " second" + (siriusplayer.trackerupdatefreq == 1 ? "" : "s") + ".", null);
 
         for each (var channel in siriusplayer.trackerData)
         {
