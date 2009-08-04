@@ -32,11 +32,12 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
+netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+
 var siriusplayer = {
 
   onLoad: function()
   {
-    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
     dump("SIRIUS Player initializing... ");
     siriusplayer.initialized = true;
     siriusplayer.version = '2.0.6';
