@@ -32,8 +32,6 @@
  *
  * ***** END LICENSE BLOCK ***** */
 
-netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
-
 var siriusplayer = {
 
   onLoad: function()
@@ -42,6 +40,7 @@ var siriusplayer = {
     siriusplayer.initialized = true;
     siriusplayer.version = '2.0.6';
     siriusplayer.passwordrealm = 'SIRIUS Player Login';
+    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
     siriusplayer.hiddenWindow = Components.classes["@mozilla.org/appshell/appShellService;1"].getService(Components.interfaces.nsIAppShellService).hiddenDOMWindow;
     siriusplayer.hiddenWindow.Components.classes["@mozilla.org/moz/jssubscript-loader;1"].getService(Components.interfaces.mozIJSSubScriptLoader).loadSubScript("chrome://siriusplayer/content/sirius_ping.js");
     siriusplayer.hiddenWindow.Components.classes["@mozilla.org/moz/jssubscript-loader;1"].getService(Components.interfaces.mozIJSSubScriptLoader).loadSubScript("chrome://siriusplayer/content/md5.js");
@@ -79,6 +78,7 @@ var siriusplayer = {
 
   country: function()
   {
+    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
     return siriusplayer.prefs.getCharPref('country');
   },
 
@@ -105,6 +105,7 @@ var siriusplayer = {
     if (topic != "nsPref:changed") return;
 
     var prefvalue = '???';
+    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
     switch (siriusplayer.prefs.getPrefType(pref))
     {
       case 32:
@@ -169,6 +170,7 @@ var siriusplayer = {
   {
     dump("SIRIUS Player fetching tracker data.\n");
     clearTimeout(siriusplayer.trackerTimer);
+    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
     if (siriusplayer.authok && siriusplayer.wantlogin)
     {
       var channelOne = "";
@@ -241,6 +243,7 @@ var siriusplayer = {
       data.channelComment = '';
       try
       {
+        netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
         data.channelCode = siriusplayer.prefs.getCharPref('channel.' + Math.floor(data.channelNumber) + '.code');
         data.channelComment = siriusplayer.prefs.getCharPref('channel.' + Math.floor(data.channelNumber) + '.comment');
         if (data.channelComment) data.channelName = data.channelComment;
@@ -283,6 +286,7 @@ var siriusplayer = {
 
   getCaptcha: function(img)
   {
+    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
     var country = siriusplayer.prefs.getCharPref('country');
 
 	  var codes = new Object();
@@ -496,6 +500,7 @@ var siriusplayer = {
 
   getAuthInfo: function()
   {
+    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
     var auth = new Object();
     var logins = siriusplayer.passwordManager.findLogins({}, 'chrome://siriusplayer', null, siriusplayer.passwordrealm);
     if (logins.length)
@@ -509,6 +514,7 @@ var siriusplayer = {
 
   setAuthInfo: function(username, password)
   {
+    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
     var logins = siriusplayer.passwordManager.findLogins({}, 'chrome://siriusplayer', null, siriusplayer.passwordrealm);
     for (i=0; i<logins.length; i++)
       siriusplayer.passwordManager.removeLogin(logins[i]);
@@ -521,6 +527,7 @@ var siriusplayer = {
   {
     dump("*** readPresets\n");
     var presetsIndex = new Array();
+    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
     var presetPref = siriusplayer.prefs.getCharPref('presets');
     if (presetPref)
     {
@@ -532,6 +539,7 @@ var siriusplayer = {
   writePresets: function(presets)
   {
     siriusplayer.presetsIndex = presets;
+    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
     siriusplayer.prefs.setCharPref('presets', siriusplayer.presetsIndex.join(','));
   },
 
@@ -623,6 +631,7 @@ var siriusplayer = {
     show: function(message, cookie)
     {
       dump("SIRIUS Player [" + cookie + "]: " + message + "\n");
+      netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
       siriusplayer.alertsService.showAlertNotification("chrome://siriusplayer/skin/noteicon.png", "SIRIUS Player", message, cookie ? true : false, cookie, siriusplayer.alert, "firefoxsiriusplayer");
     },
 
@@ -641,17 +650,24 @@ var siriusplayer = {
 
   legalagree: function()
   {
-    return siriusplayer.prefs.getBoolPref('legalagree');
+    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+    //var myPrefBranch = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefService).getBranch("extensions.siriusplayer.");
+    //var myPrefBranch = myPrefService.getBranch("extensions.siriusplayer.");
+    //var agreeResult = myPrefBranch.getBoolPref('legalagree');
+    var agreeResult = siriusplayer.prefs.getBoolPref('legalagree');
+    return agreeResult;
   },
 
   openPrefs: function()
   {
+    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
     openDialog("chrome://browser/content/preferences/preferences.xul", "Preferences", "chrome,menubar,toolbar,resizable", "siriusplayer-preferences");
   },
 
   login: function()
   {
     if (!siriusplayer.legalagree) return false;
+    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
     var country = siriusplayer.prefs.getCharPref('country');
     var auth = siriusplayer.getAuthInfo();
     if (country && auth.username && auth.password)
@@ -676,6 +692,7 @@ var siriusplayer = {
     clearTimeout(siriusplayer.trackerTimer);
     siriusplayer.stop();
     siriusplayer.killCookieDomain();
+    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
     siriusplayer.prefs.setCharPref('authtrigger', Math.floor(Math.random() * 10000));
   },
 
@@ -706,6 +723,7 @@ var siriusplayer = {
     {
       if (topic == "http-on-modify-request")
       {
+        netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
         var httpChannel = subject.QueryInterface(Components.interfaces.nsIHttpChannel);
         if (httpChannel.URI.host.match(/\.sirius\.com/i) || httpChannel.URI.host.match(/\.siriuscanada\.ca/i))
         {
@@ -778,6 +796,7 @@ var siriusplayer = {
   {
     if (siriusplayer.wantlogin)
     {
+      netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
       var url = siriusplayer.urlLogin();
 
       var auth = siriusplayer.getAuthInfo();
@@ -850,6 +869,7 @@ var siriusplayer = {
       siriusplayer.requestChannels();
     }
 
+    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
     siriusplayer.prefs.setCharPref('authtrigger', Math.floor(Math.random() * 10000));
   },
 
@@ -858,6 +878,7 @@ var siriusplayer = {
     if (verbal) siriusplayer.alert.show("Fetching SIRIUS Player internal URLs...", null);
 
     var urlupdate = new XMLHttpRequest();
+    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
     urlupdate.open('GET', siriusplayer.prefs.getCharPref('urlupdateurl'), false); // is not async
     siriusplayer.setUserAgent(urlupdate);
     urlupdate.send(null);
@@ -892,6 +913,7 @@ var siriusplayer = {
     if (verbal) siriusplayer.alert.show("Fetching SIRIUS Player channel map...", null);
 
     var chanmap = new XMLHttpRequest();
+    netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
     chanmap.open('GET', siriusplayer.prefs.getCharPref('chanmapurl'), false); // is not async
     siriusplayer.setUserAgent(chanmap);
     chanmap.send(null);
@@ -910,6 +932,7 @@ var siriusplayer = {
         var value = part[1];
         try
         {
+          netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
           siriusplayer.prefs.setCharPref(name + '.code', value);
           siriusplayer.prefs.setCharPref(name + '.comment', comment);
         }
